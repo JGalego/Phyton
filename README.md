@@ -1,8 +1,11 @@
 # Phyton 🌱
 
-**Phyton** (Greek for "plant") - A Python interpreter that accepts multiple spellings of keywords, designed to confuse bad spellers!
+[![CI/CD Pipeline](https://github.com/JGalego/Phyton/actions/workflows/ci.yml/badge.svg)](https://github.com/JGalego/Phyton/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/JGalego/Phyton/branch/main/graph/badge.svg)](https://codecov.io/gh/JGalego/Phyton)
 
-> Inspired by a [suggestion](https://www.linkedin.com/posts/mcovington_somebody-needs-to-invent-a-programming-language-activity-7354669004201893888-7tGV?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAUp-sQBFZ55uKVqPbQV7WNOA1YRQW831JI) from Michael Covington.
+**Phyton** (Greek Φυτόν for "plant") is a Python interpreter that accepts multiple spellings of keywords, designed to confuse bad spellers!
+
+> Inspired by a [suggestion](https://www.linkedin.com/posts/mcovington_somebody-needs-to-invent-a-programming-language-activity-7354669004201893888-7tGV?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAUp-sQBFZ55uKVqPbQV7WNOA1YRQW831JI) from [Michael A. Covington](https://www.covingtoninnovations.com/), author of *Natural Language Processing for Prolog Programmers* 🙌 
 
 ![Phyton](phyton.gif)
 
@@ -157,6 +160,44 @@ For more examples, see the `examples/` folder!
 3. **Go interactive:** `./phyton` for REPL mode
 4. **Explore:** Check `examples/README.md` for learning path
 
+## Testing
+
+Phyton includes a comprehensive test suite to ensure all functionality works correctly.
+
+### Running Tests
+
+```bash
+# Install test dependencies
+pip install -r requirements.txt
+
+# Run all tests with pytest
+python -m pytest test_phyton_pytest.py -v
+
+# Run tests with coverage
+python -m pytest test_phyton_pytest.py --cov=phyton --cov-report=term
+
+# Check code quality with pylint
+pylint phyton.py
+pylint test_phyton_pytest.py
+```
+
+### Test Coverage
+
+The test suite includes **72 tests** covering:
+- All keyword mappings (33 tests)
+- Fuzzy matching functionality (7 tests)
+- Command-line argument parsing (10 tests)
+- File execution and error handling (10 tests)
+- Interactive mode (4 tests)
+- Edge cases and error conditions (8 tests)
+
+### Continuous Integration
+
+GitHub Actions automatically runs all tests on:
+- Python 3.8, 3.9, 3.10, 3.11, and 3.12
+- Code quality checks with pylint
+- Coverage reporting
+
 ## File Extensions
 
 While Phyton can execute any `.py` file, we recommend using `.phy` extension for Phyton files to distinguish them from regular Python files.
@@ -164,6 +205,12 @@ While Phyton can execute any `.py` file, we recommend using `.phy` extension for
 ## Contributing
 
 Feel free to add more creative misspellings! The goal is to accept as many common typos and variations as possible while still being functional.
+
+When contributing:
+1. Add tests for new functionality
+2. Ensure all tests pass: `python -m pytest test_phyton_pytest.py`
+3. Check code quality: `pylint phyton.py`
+4. Update documentation as needed
 
 ## Why?
 
