@@ -38,6 +38,99 @@ License: Public Domain - Have fun with bad spelling! 🌱
 import re
 import sys
 import difflib
+import argparse
+
+class PhytonArgumentParser:
+    """Argument parser that accepts misspellings of options."""
+
+    def __init__(self):
+        """Initialize the argument parser with fuzzy option matching."""
+        self.parser = argparse.ArgumentParser(
+            prog='phyton',
+            description='Phyton - A Python interpreter that accepts misspelled keywords',
+            epilog='Examples:\n'
+                   '  phyton hello.phy          # Run with fuzzy matching disabled (default)\n'
+                   '  phyton --fuzzy file.phy   # Run with fuzzy matching enabled\n'
+                   '  phyton --interactive      # Start interactive mode',
+            formatter_class=argparse.RawDescriptionHelpFormatter
+        )
+
+        # Define known option misspellings
+        self.option_mappings = {
+            'fuzzy': ['fuzy', 'fuzz', 'fuzi', 'fzzy'],
+            'interactive': ['interactiv', 'interact', 'inter', 'intractiv'],
+            'help': ['halp', 'helap', 'hepl', 'hep']
+        }
+
+        # Add arguments
+        self.parser.add_argument(
+            '--fuzzy', 
+            action='store_true',
+            help='Enable fuzzy matching for unknown misspellings'
+        )
+        self.parser.add_argument(
+            '--interactive', '-i',
+            action='store_true',
+            help='Start in interactive mode'
+        )
+        self.parser.add_argument(
+            'filename',
+            nargs='?',
+            help='Phyton file to execute (.phy extension)'
+        )
+
+    def fix_option_spelling(self, args):
+        """Fix misspelled command line options."""
+        fixed_args = []
+
+        for arg in args:
+            if arg.startswith('--'):
+                option = arg[2:]  # Remove --
+                fixed_option = self._find_option_match(option)
+                if fixed_option:
+                    fixed_args.append(f'--{fixed_option}')
+                else:
+                    fixed_args.append(arg)
+            elif arg.startswith('-'):
+                # Handle single dash options
+                fixed_args.append(arg)
+            else:
+                fixed_args.append(arg)
+
+        return fixed_args
+
+    def _find_option_match(self, option):
+        """Find the correct spelling for a misspelled option."""
+        # First check exact matches
+        if option in self.option_mappings:
+            return option
+
+        # Check misspelling mappings
+        for correct, misspellings in self.option_mappings.items():
+            if option in misspellings:
+                print(f"🔧 Fixed option: --{option} → --{correct}")
+                return correct
+
+        # If no exact match found, try fuzzy matching
+        all_options = list(self.option_mappings.keys())
+        matches = difflib.get_close_matches(option, all_options, n=1, cutoff=0.7)
+        if matches:
+            print(f"🔧 Fixed option: --{option} → --{matches[0]} (fuzzy match)")
+            return matches[0]
+
+        return None
+
+    def parse_args(self, args=None):
+        """Parse arguments with misspelling correction."""
+        if args is None:
+            args = sys.argv[1:]
+
+        # Fix option spellings
+        fixed_args = self.fix_option_spelling(args)
+
+        # Parse the fixed arguments
+        return self.parser.parse_args(fixed_args)
+
 
 class PhytonInterpreter:
     """
@@ -157,15 +250,24 @@ class PhytonInterpreter:
         # Get all correct keywords
         all_keywords = list(self.keyword_mappings.keys())
 
-        # Try direct similarity with keywords (higher cutoff for safety)
-        matches = difflib.get_close_matches(word, all_keywords, n=1, cutoff=0.8)
+        # Use adaptive threshold based on word length to avoid false positives
+        # Shorter words need higher similarity to avoid false matches
+        if len(word) <= 3:
+            threshold = 0.9
+        elif len(word) <= 5:
+            threshold = 0.8
+        else:
+            threshold = 0.7
+
+        # Try direct similarity with keywords
+        matches = difflib.get_close_matches(word, all_keywords, n=1, cutoff=threshold)
         if matches:
             return matches[0]
 
-        # Try matching against known misspellings (lower cutoff)
+        # Try matching against known misspellings with same adaptive threshold
         for correct, misspellings in self.keyword_mappings.items():
             for misspelling in misspellings:
-                if difflib.SequenceMatcher(None, word, misspelling).ratio() > 0.8:
+                if difflib.SequenceMatcher(None, word, misspelling).ratio() >= threshold:
                     return correct
 
         return None
@@ -359,69 +461,56 @@ class PhytonInterpreter:
                 break
 
 def main():
-    """
-    Main entry point for the Phyton interpreter.
+    """Main entry point for Phyton interpreter."""
+    try:
+        # Parse command line arguments with misspelling correction
+        arg_parser = PhytonArgumentParser()
+        args = arg_parser.parse_args()
 
-    Determines whether to run in file execution mode or interactive mode based
-    on command-line arguments. If a filename is provided, executes that file.
-    Otherwise, starts the interactive REPL.
+        # Fuzzy matching is disabled by default, enabled with --fuzzy
+        fuzzy_enabled = args.fuzzy
 
-    Command-line usage:
-        python3 phyton.py                          # Interactive mode
-        python3 phyton.py filename.phy             # Execute file
-        python3 phyton.py --fuzzy filename.phy     # Execute with fuzzy matching
-        python3 phyton.py --fuzzy                  # Interactive with fuzzy matching
+        # Create interpreter instance
+        interpreter = PhytonInterpreter(fuzzy_matching=fuzzy_enabled)
 
-    Flags:
-        --fuzzy: Enable fuzzy matching for unknown misspellings
+        if args.interactive or args.filename is None:
+            # Start interactive mode
+            print("🐍 Welcome to Phyton - Python for Bad Spellers! 🐍")
+            if fuzzy_enabled:
+                print("✨ Fuzzy matching enabled")
+            else:
+                print("⚡ Fuzzy matching disabled (use --fuzzy to enable)")
+            print("Type 'exit()' or press Ctrl+C to quit.")
+            print("-" * 50)
 
-    Side Effects:
-        - Creates PhytonInterpreter instance
-        - Either executes a file or starts interactive mode
-        - Handles file not found and other execution errors
-    """
-    # Parse command line arguments
-    fuzzy_matching = False
-    filename = None
+            interpreter.interactive_mode()
+        else:
+            # Execute file
+            filename = args.filename
+            if not filename.endswith('.phy'):
+                print(f"Warning: Expected .phy file, got {filename}")
 
-    args = sys.argv[1:]  # Remove script name
+            try:
+                with open(filename, 'r', encoding='utf-8') as f:
+                    code = f.read()
+                interpreter.execute(code)
+            except FileNotFoundError:
+                print(f"PhytonError: File '{filename}' not found")
+            except PermissionError:
+                print(f"PhytonError: Permission denied reading file '{filename}'")
+            except UnicodeDecodeError as e:
+                print(f"PhytonError: Cannot decode file '{filename}': {e}")
+            except OSError as e:
+                print(f"PhytonError: OS error reading file '{filename}': {e}")
+            except Exception as e:  # pylint: disable=broad-exception-caught
+                print(f"PhytonUnexpectedError: {type(e).__name__}: {e}")
+                print("This might be a bug in Phyton.")
 
-    # Check for fuzzy flag
-    if '--fuzzy' in args:
-        fuzzy_matching = True
-        args.remove('--fuzzy')
-
-    # Get filename if provided
-    if args:
-        filename = args[0]
-
-    # Create interpreter with appropriate settings
-    interpreter = PhytonInterpreter(fuzzy_matching=fuzzy_matching)
-
-    if fuzzy_matching:
-        print("# Phyton: Fuzzy matching enabled - will attempt to correct unknown misspellings")
-
-    if filename:
-        # Run file mode
-        try:
-            with open(filename, 'r', encoding='utf-8') as f:
-                code = f.read()
-            interpreter.execute(code)
-        except FileNotFoundError:
-            print(f"PhytonError: File '{filename}' not found")
-        except PermissionError:
-            print(f"PhytonError: Permission denied reading file '{filename}'")
-        except UnicodeDecodeError as e:
-            print(f"PhytonError: Cannot decode file '{filename}': {e}")
-        except OSError as e:
-            print(f"PhytonError: OS error reading file '{filename}': {e}")
-        except Exception as e:  # pylint: disable=broad-exception-caught
-            # Unexpected error when reading/processing the file
-            print(f"PhytonUnexpectedError: {type(e).__name__}: {e}")
-            print("This might be a bug in Phyton.")
-    else:
-        # Interactive mode
-        interpreter.interactive_mode()
+    except KeyboardInterrupt:
+        print("\n👋 Goodbye from Phyton!")
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        print(f"❌ Error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

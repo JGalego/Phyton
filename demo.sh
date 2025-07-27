@@ -37,14 +37,29 @@ echo "---------------------------------------------"
 ./phyton examples/spelling_nightmare.phy
 echo ""
 
-echo "7. Fuzzy Demo (requires --fuzzy flag):"
-echo "--------------------------------------"
-echo "Without fuzzy matching (will fail):"
-timeout 2 ./phyton examples/fuzzy_demo.phy >/dev/null 2>&1 || echo "❌ Failed as expected - unknown misspellings"
+echo "7. Strict Mode (no fuzzy matching):"
+echo "-----------------------------------"
+echo "Running with --no-fuzzy flag to disable fuzzy matching:"
+./phyton --no-fuzzy examples/fuzzy_demo.phy
 echo ""
-echo "With fuzzy matching (will work):"
-./phyton --fuzzy examples/fuzzy_demo.phy
+
+echo "8. Command Option Misspellings:"
+echo "-------------------------------"
+echo "Phyton can even fix misspelled command options!"
+echo "Trying --halp instead of --help:"
+./phyton --halp | head -5
 echo ""
+
+echo "9. Fuzzy Demo (enabled by default):"
+echo "-----------------------------------"
+echo "Fuzzy matching helps with unknown misspellings:"
+./phyton examples/fuzzy_demo.phy
+echo ""
+
+echo "🎉 Demo Complete! 🎉"
+echo "==================="
+echo "Phyton: Making Python accessible to bad spellers everywhere!"
+echo "Try: ./phyton --interactive  (or even --interactiv!)"
 
 echo ""
 echo "🌿 Phyton Demo Complete! 🌿"

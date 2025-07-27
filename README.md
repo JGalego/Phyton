@@ -61,27 +61,41 @@ python3 phyton.py
 ### File Execution
 
 ```bash
-# Using Python directly
+# Using Python directly (fuzzy matching disabled by default)
 python3 phyton.py examples/quick_start.phy
 
 # Using the launcher script (recommended)
 ./phyton examples/quick_start.phy
 
-# With fuzzy matching for unknown misspellings
+# Enable fuzzy matching for unknown misspellings
 python3 phyton.py --fuzzy examples/quick_start.phy
 ./phyton --fuzzy examples/quick_start.phy
 ```
 
-### Fuzzy Matching
+### Command Line Options
 
-Phyton includes an optional **fuzzy matching** feature that can correct unknown misspellings not in the predefined dictionary:
+Phyton accepts misspelled command line options too! Try these:
 
 ```bash
-# Enable fuzzy matching
+# These all work thanks to option misspelling correction:
+./phyton --halp                    # → --help
+./phyton --fuzy file.phy           # → --fuzzy  
+./phyton --interactiv              # → --interactive
+```
+
+### Fuzzy Matching
+
+Phyton includes **fuzzy matching** that can correct unknown misspellings not in the predefined dictionary:
+
+```bash
+# Default behavior - fuzzy matching disabled
+python3 phyton.py your_file.phy
+
+# Enable fuzzy matching for unknown misspellings
 python3 phyton.py --fuzzy your_file.phy
 
-# Interactive mode with fuzzy matching
-python3 phyton.py --fuzzy
+# Interactive mode (fuzzy disabled by default)
+python3 phyton.py --interactive
 ```
 
 **Examples of fuzzy corrections:**
@@ -89,7 +103,7 @@ python3 phyton.py --fuzzy
 - `printt` → `print` 
 - `prrint` → `print`
 
-⚠️ **Note:** Fuzzy matching is disabled by default to ensure predictable behavior. It may occasionally make incorrect assumptions about what you meant.
+⚡ **Note:** Fuzzy matching is disabled by default for predictable behavior. Use `--fuzzy` to enable advanced spelling correction.
 
 ## Examples
 
