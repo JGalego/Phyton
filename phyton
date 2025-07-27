@@ -1,0 +1,14 @@
+#!/bin/bash
+# Phyton launcher script
+# Usage: ./phyton [file.phy]
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+PHYTON_INTERPRETER="$SCRIPT_DIR/phyton.py"
+
+if [ ! -f "$PHYTON_INTERPRETER" ]; then
+    echo "Error: Phyton interpreter not found at $PHYTON_INTERPRETER"
+    exit 1
+fi
+
+# Run the Phyton interpreter with Python 3
+exec python3 "$PHYTON_INTERPRETER" "$@"

@@ -1,0 +1,42 @@
+# Game: Guess the Misspelling!
+# Can you figure out what the original keywords were supposed to be?
+
+imprt random
+
+prin("🎮 Welcome to the Phyton Spelling Game! 🎮")
+prin("Guess what the misspelled keywords were originally!")
+prin()
+
+# Game data with creative misspellings
+spelling_challenges = [
+    ("deff", "def"),
+    ("iff", "if"), 
+    ("els", "else"),
+    ("fore", "for"),
+    ("whyl", "while"),
+    ("clas", "class"),
+    ("retrun", "return"),
+    ("imprt", "import"),
+    ("fals", "False"),
+    ("tru", "True")
+]
+
+score = 0
+total_questions = len(spelling_challenges)
+
+prin(f"I'll show you {total_questions} misspelled keywords.")
+prin("Try to guess the correct spelling!")
+prin()
+
+fore challenge inn spelling_challenges:
+    misspelled, correct = challenge
+    prin(f"What is '{misspelled}' supposed to be?")
+    
+    # In a real game, you'd get user input here
+    # For this demo, we'll just show the answer
+    prin(f"Answer: '{misspelled}' → '{correct}' ✅")
+    score += 1
+    prin()
+
+prin(f"🎉 Game Over! You got {score}/{total_questions} correct!")
+prin("Thanks for playing the Phyton Spelling Game! 🌱")

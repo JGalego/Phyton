@@ -1,0 +1,34 @@
+# Bad Speller's Paradise - Maximum misspellings in minimal code!
+# See how many keywords you can misspell and still have working code
+
+klass BadSpeller:
+    deff __init__(self, skill_level):
+        self.skill = skill_level
+        prin(f"Created bad speller with skill: {skill_level}")
+    
+    deff attempt_spelling(self):
+        # Nested misspellings!
+        fore attempt inn range(3):
+            iff attempt == 0:
+                prin("Frist attempt: deff instead of def")
+            els:
+                prin(f"Attempt {attempt + 1}: Still terrible!")
+
+# Create our bad speller
+speller = BadSpeller("Expert Level Bad")
+
+# Test with even more misspellings
+tri:
+    speller.attempt_spelling()
+    
+    # Boolean logic with misspellings
+    is_bad = tru
+    is_good = fals
+    
+    iff is_bad andd no is_good:
+        prin("Successfully failed at spelling! 🏆")
+        
+exept Exception az e:
+    prin(f"Even our errors have bad spelling: {e}")
+finaly:
+    prin("Mission accomplished: Maximum confusion achieved! 😄")

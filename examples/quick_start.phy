@@ -1,0 +1,25 @@
+# Quick Start - Your first Phyton program!
+# This shows the most common misspellings that Phyton handles
+
+prin("Welcome to Phyton! 🌱")
+
+# Simple function with misspelled def
+deff greet(name):
+    prin(f"Hello, {name}!")
+
+# Misspelled if/else
+age = 25
+iff age >= 18:
+    prin("You're an adult!")
+els:
+    prin("You're a minor!")
+
+# Misspelled for loop
+prin("Counting to 5:")
+fore i inn range(1, 6):
+    prin(i)
+
+# Call our function
+greet("Phyton Beginner")
+
+prin("Congratulations! You've run your first Phyton program! 🎉")

@@ -1,0 +1,32 @@
+# Another Phyton example with more misspellings
+
+# Misspelled import and from
+imprt math
+frm random imort randint
+
+# Misspelled try/except
+tri:
+    result = 10 / 0
+exept ZeroDivisionError az e:
+    prin(f"Caught error: {e}")
+finaly:
+    prin("Cleanup complete!")
+
+# Misspelled boolean and conditional operators
+is_true = tru
+is_false = fals
+
+iff is_true andd no is_false:
+    prin("Logic works!")
+
+# Misspelled None
+my_value = null
+iff my_value iz null:
+    prin("Value is None")
+
+# More creative misspellings
+fore num inn [1, 2, 3, 4, 5]:
+    iff num % 2 == 0:
+        prin(f"{num} is even")
+    els:
+        prin(f"{num} is odd")

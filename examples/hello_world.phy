@@ -1,0 +1,37 @@
+# Example Phyton script with misspelled keywords
+# This should work perfectly in Phyton!
+
+deff hello_world():
+    prin("Hello from Phyton! 🌱")
+
+# Misspelled if/else
+x = 5
+iff x > 3:
+    prin("x is greater than 3")
+els:
+    prin("x is not greater than 3")
+
+# Misspelled for loop
+fore i inn range(3):
+    prin(f"Count: {i}")
+
+# Misspelled while loop
+count = 0
+whil count < 3:
+    prin(f"While count: {count}")
+    count += 1
+
+# Misspelled class
+clas MyPlant:
+    deff __init__(self, name):
+        self.name = name
+    
+    deff grow(self):
+        retrun f"{self.name} is growing! 🌿"
+
+# Create and use the class
+plant = MyPlant("Phyton Plant")
+prin(plant.grow())
+
+# Call the function
+hello_world()

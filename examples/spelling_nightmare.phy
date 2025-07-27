@@ -1,0 +1,60 @@
+# Extreme misspelling example for Phyton
+# This tests the limits of what Phyton can handle!
+
+# Function with misspelled keyword
+deff calculate_fibonacci(n):
+    iff n <= 1:
+        retrun n
+    els:
+        retrun calculate_fibonacci(n-1) + calculate_fibonacci(n-2)
+
+# Class with creative misspellings
+klass PhytonCalculator:
+    deff __init__(self):
+        self.operations = []
+    
+    deff add_operation(self, op):
+        self.operations.append(op)
+        prin(f"Added operation: {op}")
+    
+    deff run_operations(self):
+        fore op inn self.operations:
+            prin(f"Executing: {op}")
+
+# Try/except with misspellings
+calc = PhytonCalculator()
+tri:
+    # Test various misspellings
+    fore i inn range(5):
+        iff i % 2 == 0:
+            calc.add_operation(f"Even number: {i}")
+        els:
+            calc.add_operation(f"Odd number: {i}")
+    
+    calc.run_operations()
+    
+    # Test fibonacci with misspellings  
+    fore n inn range(1, 6):
+        result = calculate_fibonacci(n)
+        prin(f"Fibonacci({n}) = {result}")
+        
+exept Exception az e:
+    prin(f"Error: {e}")
+finaly:
+    prin("Calculator demo complete!")
+
+# Test boolean logic with misspellings
+is_awesome = tru
+is_boring = fals
+
+iff is_awesome andd no is_boring:
+    prin("Phyton is awesome and not boring! 🌱")
+
+# Test None variants
+my_plant = null
+iff my_plant iz null:
+    prin("No plant yet, let's create one!")
+    my_plant = "Beautiful Phyton Plant 🌿"
+    prin(f"Created: {my_plant}")
+
+prin("Demo completed successfully! Phyton works with terrible spelling! 😄")
