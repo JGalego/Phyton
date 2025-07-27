@@ -1,6 +1,6 @@
 #!/bin/bash
 # Phyton launcher script
-# Usage: ./phyton [file.phy]
+# Usage: ./phyton [--fuzzy] [file.phy]
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 PHYTON_INTERPRETER="$SCRIPT_DIR/phyton.py"
@@ -10,5 +10,5 @@ if [ ! -f "$PHYTON_INTERPRETER" ]; then
     exit 1
 fi
 
-# Run the Phyton interpreter with Python 3
+# Run the Phyton interpreter with Python 3, passing all arguments
 exec python3 "$PHYTON_INTERPRETER" "$@"

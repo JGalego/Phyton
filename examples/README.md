@@ -50,6 +50,14 @@ Run any example with: `../phyton filename.phy`
 - Heavy use of all supported misspellings
 - Demonstrates Phyton's full capability
 
+### 🔍 `fuzzy_demo.phy`
+**Fuzzy matching demonstration**
+- Shows misspellings NOT in the dictionary
+- Only works with `--fuzzy` flag enabled
+- Demonstrates `defff`, `printt`, `prrint`
+- Perfect for testing fuzzy matching limits
+- Demonstrates Phyton's full capability
+
 ## Running Examples
 
 ### Individual Examples

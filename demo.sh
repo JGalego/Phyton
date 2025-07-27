@@ -37,11 +37,22 @@ echo "---------------------------------------------"
 ./phyton examples/spelling_nightmare.phy
 echo ""
 
+echo "7. Fuzzy Demo (requires --fuzzy flag):"
+echo "--------------------------------------"
+echo "Without fuzzy matching (will fail):"
+timeout 2 ./phyton examples/fuzzy_demo.phy >/dev/null 2>&1 || echo "❌ Failed as expected - unknown misspellings"
+echo ""
+echo "With fuzzy matching (will work):"
+./phyton --fuzzy examples/fuzzy_demo.phy
+echo ""
+
+echo ""
 echo "🌿 Phyton Demo Complete! 🌿"
-echo "All 6 examples ran successfully with terrible spelling!"
+echo "All 7 examples ran successfully!"
 echo ""
 echo "💡 Next steps:"
 echo "- Try interactive mode: ./phyton"
+echo "- Try fuzzy matching: ./phyton --fuzzy examples/fuzzy_demo.phy"
 echo "- Run individual examples: ./phyton examples/quick_start.phy"
 echo "- Check examples/README.md for detailed explanations"
 echo "- Create your own .phy files with creative misspellings!"

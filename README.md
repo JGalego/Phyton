@@ -12,6 +12,7 @@
 - Interactive REPL mode
 - File execution mode
 - Friendly error messages
+- Fuzzy matching for unknown misspellings (optional)
 - Supports creative variations like `prin` for `print`, `deff` for `def`, etc.
 
 ## Supported Misspellings
@@ -65,7 +66,30 @@ python3 phyton.py examples/quick_start.phy
 
 # Using the launcher script (recommended)
 ./phyton examples/quick_start.phy
+
+# With fuzzy matching for unknown misspellings
+python3 phyton.py --fuzzy examples/quick_start.phy
+./phyton --fuzzy examples/quick_start.phy
 ```
+
+### Fuzzy Matching
+
+Phyton includes an optional **fuzzy matching** feature that can correct unknown misspellings not in the predefined dictionary:
+
+```bash
+# Enable fuzzy matching
+python3 phyton.py --fuzzy your_file.phy
+
+# Interactive mode with fuzzy matching
+python3 phyton.py --fuzzy
+```
+
+**Examples of fuzzy corrections:**
+- `defff` → `def`
+- `printt` → `print` 
+- `prrint` → `print`
+
+⚠️ **Note:** Fuzzy matching is disabled by default to ensure predictable behavior. It may occasionally make incorrect assumptions about what you meant.
 
 ## Examples
 

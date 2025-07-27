@@ -37,6 +37,7 @@ License: Public Domain - Have fun with bad spelling! 🌱
 
 import re
 import sys
+import difflib
 
 class PhytonInterpreter:
     """
@@ -50,14 +51,21 @@ class PhytonInterpreter:
         keyword_mappings (dict): Dictionary mapping correct keywords to lists of misspellings
     """
 
-    def __init__(self):
+    def __init__(self, fuzzy_matching=False):
         """
         Initialize the Phyton interpreter with keyword mapping dictionary.
 
         Sets up a comprehensive mapping of correct keywords to lists of their
         common misspellings. This structure makes it easier to maintain and
         extend the misspelling database.
+
+        Args:
+            fuzzy_matching (bool): Enable fuzzy matching for unknown misspellings.
+                                 When True, uses similarity algorithms to guess
+                                 corrections for typos not in the dictionary.
+                                 Default is False for predictable behavior.
         """
+        self.fuzzy_matching = fuzzy_matching
         # Map of correct keywords to lists of their common misspellings
         self.keyword_mappings = {
             'def': ['def', 'deff', 'define', 'defin'],
@@ -130,6 +138,38 @@ class PhytonInterpreter:
         """
         return self.keyword_mappings.get(correct_keyword, [])
 
+    def find_fuzzy_match(self, word):
+        """
+        Find the closest matching keyword using fuzzy string matching.
+
+        Uses difflib to find similar keywords based on string similarity.
+        Only returns matches above a certain confidence threshold.
+
+        Args:
+            word (str): The potentially misspelled word to match
+
+        Returns:
+            str or None: The closest matching keyword, or None if no good match
+        """
+        if not self.fuzzy_matching:
+            return None
+
+        # Get all correct keywords
+        all_keywords = list(self.keyword_mappings.keys())
+
+        # Try direct similarity with keywords (higher cutoff for safety)
+        matches = difflib.get_close_matches(word, all_keywords, n=1, cutoff=0.8)
+        if matches:
+            return matches[0]
+
+        # Try matching against known misspellings (lower cutoff)
+        for correct, misspellings in self.keyword_mappings.items():
+            for misspelling in misspellings:
+                if difflib.SequenceMatcher(None, word, misspelling).ratio() > 0.8:
+                    return correct
+
+        return None
+
     def fix_spelling(self, code):
         """
         Fix common misspellings of Python keywords in the provided code.
@@ -137,13 +177,16 @@ class PhytonInterpreter:
         Uses regex with word boundaries to replace misspelled keywords with their
         correct equivalents while preserving the rest of the code structure.
 
+        If fuzzy_matching is enabled, also attempts to correct unknown misspellings
+        using similarity algorithms.
+
         Args:
             code (str): The Phyton source code containing potential misspellings
 
         Returns:
             str: The code with misspellings corrected to valid Python syntax
         """
-        # Use word boundary regex to replace whole words only
+        # First pass: exact matches from dictionary
         fixed_code = code
 
         for correct_keyword, misspellings in self.keyword_mappings.items():
@@ -155,6 +198,47 @@ class PhytonInterpreter:
                 # Use word boundaries to avoid partial matches
                 pattern = r'\b' + re.escape(misspelling) + r'\b'
                 fixed_code = re.sub(pattern, correct_keyword, fixed_code)
+
+        # Second pass: fuzzy matching (if enabled)
+        if self.fuzzy_matching:
+            fixed_code = self._apply_fuzzy_matching(fixed_code)
+
+        return fixed_code
+
+    def _apply_fuzzy_matching(self, code):
+        """
+        Apply fuzzy matching to find potential corrections for unknown words.
+
+        This is a separate method to keep the main fix_spelling method clean.
+
+        Args:
+            code (str): Code after exact matching corrections
+
+        Returns:
+            str: Code with additional fuzzy matching corrections applied
+        """
+        # Find all identifier-like words in the code
+        words = re.findall(r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', code)
+
+        # Track what we've already processed to avoid duplicates
+        processed_words = set()
+        fixed_code = code
+
+        for word in words:
+            # Skip if already processed or if it's a known correct keyword
+            if word in processed_words or word in self.keyword_mappings:
+                continue
+
+            processed_words.add(word)
+
+            # Try to find a fuzzy match
+            fuzzy_match = self.find_fuzzy_match(word)
+            if fuzzy_match:
+                # Apply the correction
+                pattern = r'\b' + re.escape(word) + r'\b'
+                fixed_code = re.sub(pattern, fuzzy_match, fixed_code)
+                # Let user know about fuzzy corrections
+                print(f"# Phyton fuzzy match: '{word}' -> '{fuzzy_match}'")
 
         return fixed_code
 
@@ -283,19 +367,42 @@ def main():
     Otherwise, starts the interactive REPL.
 
     Command-line usage:
-        python3 phyton.py                 # Interactive mode
-        python3 phyton.py filename.phy    # Execute file
+        python3 phyton.py                          # Interactive mode
+        python3 phyton.py filename.phy             # Execute file
+        python3 phyton.py --fuzzy filename.phy     # Execute with fuzzy matching
+        python3 phyton.py --fuzzy                  # Interactive with fuzzy matching
+
+    Flags:
+        --fuzzy: Enable fuzzy matching for unknown misspellings
 
     Side Effects:
         - Creates PhytonInterpreter instance
         - Either executes a file or starts interactive mode
         - Handles file not found and other execution errors
     """
-    interpreter = PhytonInterpreter()
+    # Parse command line arguments
+    fuzzy_matching = False
+    filename = None
 
-    if len(sys.argv) > 1:
+    args = sys.argv[1:]  # Remove script name
+
+    # Check for fuzzy flag
+    if '--fuzzy' in args:
+        fuzzy_matching = True
+        args.remove('--fuzzy')
+
+    # Get filename if provided
+    if args:
+        filename = args[0]
+
+    # Create interpreter with appropriate settings
+    interpreter = PhytonInterpreter(fuzzy_matching=fuzzy_matching)
+
+    if fuzzy_matching:
+        print("# Phyton: Fuzzy matching enabled - will attempt to correct unknown misspellings")
+
+    if filename:
         # Run file mode
-        filename = sys.argv[1]
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 code = f.read()

@@ -1,0 +1,11 @@
+# Fuzzy Matching Demo - misspellings not in the dictionary
+# These misspellings will only work with --fuzzy flag
+
+defff hello_fuzzy():
+    printt("This only works with fuzzy matching!")
+    retrun "Success!"  # This one is in the dictionary
+
+# Test it
+iff True:  # This is in the dictionary
+    result = hello_fuzzy()
+    prrint(f"Result: {result}")  # This needs fuzzy matching
