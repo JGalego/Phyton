@@ -29,10 +29,11 @@ jobs:
     - name: Lint with pylint
       run: |
         pylint phyton.py
-        pylint test_phyton_pytest.py
+        pylint test_phyton.py
 
     - name: Test with pytest
       run: |
+        python -m pytest test_phyton.py -v
         python -m pytest test_phyton_pytest.py -v
 
   coverage:
@@ -54,7 +55,7 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        python -m pytest test_phyton_pytest.py --cov=phyton --cov-report=xml --cov-report=term
+        python -m pytest test_phyton.py --cov=phyton --cov-report=xml --cov-report=term
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5

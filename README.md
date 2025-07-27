@@ -171,25 +171,27 @@ Phyton includes a comprehensive test suite to ensure all functionality works cor
 pip install -r requirements.txt
 
 # Run all tests with pytest
-python -m pytest test_phyton_pytest.py -v
+python -m pytest test_phyton.py -v
 
 # Run tests with coverage
-python -m pytest test_phyton_pytest.py --cov=phyton --cov-report=term
+python -m pytest test_phyton.py --cov=phyton --cov-report=term
 
 # Check code quality with pylint
 pylint phyton.py
-pylint test_phyton_pytest.py
+pylint test_phyton.py
 ```
 
 ### Test Coverage
 
-The test suite includes **72 tests** covering:
+The test suite includes **130 tests** covering:
 - All keyword mappings (33 tests)
-- Fuzzy matching functionality (7 tests)
-- Command-line argument parsing (10 tests)
-- File execution and error handling (10 tests)
-- Interactive mode (4 tests)
-- Edge cases and error conditions (8 tests)
+- Fuzzy matching functionality (15 tests)
+- Command-line argument parsing (20 tests)
+- File execution and error handling (25 tests)
+- Interactive mode (10 tests)
+- Edge cases and comprehensive coverage (27 tests)
+
+**Current coverage: 79%** with perfect pylint score (10/10)
 
 ### Continuous Integration
 
@@ -208,8 +210,8 @@ Feel free to add more creative misspellings! The goal is to accept as many commo
 
 When contributing:
 1. Add tests for new functionality
-2. Ensure all tests pass: `python -m pytest test_phyton_pytest.py`
-3. Check code quality: `pylint phyton.py`
+2. Ensure all tests pass: `python -m pytest test_phyton.py`
+3. Check code quality: `pylint phyton.py test_phyton.py`
 4. Update documentation as needed
 
 ## Why?
