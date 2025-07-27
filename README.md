@@ -2,6 +2,8 @@
 
 **Phyton** (Greek for "plant") - A Python interpreter that accepts multiple spellings of keywords, designed to confuse bad spellers!
 
+> Inspired by a [suggestion](https://www.linkedin.com/posts/mcovington_somebody-needs-to-invent-a-programming-language-activity-7354669004201893888-7tGV?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAUp-sQBFZ55uKVqPbQV7WNOA1YRQW831JI) from Michael Covington.
+
 ![Phyton](phyton.gif)
 
 ## Features
